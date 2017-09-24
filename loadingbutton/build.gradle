@@ -1,0 +1,120 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+final LIBRARY_VERSION = '0.1.0'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "$LIBRARY_VERSION"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    final SUPPORT_LIBRARY_VERSION = '26.0.2'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    //Support library
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+
+    //Custom loaders
+    compile 'com.wang.avi:library:2.1.3'
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+group = 'petterive.android'
+version = "$LIBRARY_VERSION"
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name 'LoadingButton'
+            description 'Extension of Android button that supports showing a loading indicator'
+            url 'https://github.com/PetterIve/loadingbutton'
+            inceptionYear '2016'
+
+            packaging 'aar'
+            groupId 'petterive.android'
+            artifactId 'loadingbutton'
+            version "$LIBRARY_VERSION"
+
+            licenses {
+                license {
+                    name 'The MIT License (MIT)'
+                    url 'https://opensource.org/licenses/MIT'
+                }
+            }
+            scm {
+                connection 'https://github.com/PetterIve/loadingbutton.git'
+                url 'https://github.com/PetterIve/loadingbutton'
+
+            }
+            developers {
+                developer {
+                    id = 'petterive'
+                    name 'Petter Iversen'
+                }
+            }
+        }
+    }
+}
+
+Properties bintrayProperties = new Properties()
+bintrayProperties.load(project.rootProject.file('bintray.properties').newDataInputStream())
+
+bintray {
+    user = bintrayProperties.getProperty('user')
+    key = bintrayProperties.get('key')
+    publish = true
+    override = true
+    configurations = ['archives']
+    pkg {
+        repo = 'android'
+        name = 'loading-button'
+        userOrg = 'petterive'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/PetterIve/loadingbutton.git'
+        publish = true
+        version {
+            name = "$LIBRARY_VERSION"
+            desc = "Loadingbutton $LIBRARY_VERSION"
+            released = new Date()
+            vcsTag = "v$LIBRARY_VERSION"
+        }
+    }
+}

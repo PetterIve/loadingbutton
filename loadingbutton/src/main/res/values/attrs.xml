@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LoadingButton">
+        <attr name="text" format="reference|string"/>
+        <attr name="textColor" format="reference|color"/>
+        <attr name="textSize" format="dimension|reference" />
+        <attr name="enabled" format="boolean" />
+        <attr name="textAllCaps" />
+        <attr name="drawableLeft" format="reference" />
+        <attr name="drawableTop" format="reference"/>
+        <attr name="drawableRight" format="reference"/>
+        <attr name="drawableBottom" format="reference"/>
+        <attr name="textColorDisabled" format="reference|color"/>
+        <attr name="buttonDisabledColor" format="reference|color"/>
+        <attr name="buttonColor" format="reference|color"/>
+        <attr name="loadingIndicatorColor" format="reference|color"/>
+        <attr name="loadingView" format="reference" />
+    </declare-styleable>
+
+</resources>
